@@ -44,17 +44,25 @@ var app = {
             }
             $('#map').hide();
             $('#destination').show();
-            $(".list-group-item").bind('click', function (evt) {
-                $("#map").show();
+            $('#ListView').on('click', function (e) {
+                console.log('you clicked to see the list')
+                $(this).unbind('click');
                 $('.map-item').bind('click', function(evt){
                     console.log('clicked on the map');
                     $('.map-item').unbind('click');
                     $("#map").hide();
                     $("#destination").show();
                 });
-                $("#destination").hide();
-            });
-
+            })
+            $('#MapView').on('click', function (e){
+                console.log('you clicked to see the map')
+                $(this).unbind('click');
+                $('#ListView').bind('click', function(evt){
+                    $(this).unbind('click');
+                    $("#map").show();
+                    $("#destination").hide();
+                });
+            })
         }
     },
     onLocationFound: function (e) {
@@ -103,21 +111,13 @@ var app = {
     initGui: function () {
         $("#destination").hide();
         $("#map").show();
-        $("#settings").hide();
         $("#homebtn").bind('click', function (evt) {
             $("#destination").hide();
             $("#map").show();
-            $("#settings").hide();
         });
         $("#destinationbtn").bind('click', function (evt) {
             $("#map").hide();
-            $("#settings").hide();
             $("#destination").show();
-        });
-        $("#settingsbtn").bind('click', function (evt) {
-            $("#map").hide();
-            $("#destination").hide();
-            $("#settings").show();
         });
         $('#loading').fadeOut();
 
@@ -135,7 +135,6 @@ var app = {
     // Application Constructor
     initialize: function () {
         $("#list").hide();
-        $("#search").show();
         $('#map').hide();
         console.log("App Init");
         app.bindEvents();
