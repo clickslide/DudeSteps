@@ -6,7 +6,7 @@
  * @namespace NML.js
  */
 /*jshint unused: false */
-/* global window, $, appconfig, NML, document, device, dr   ive */
+/* global window, $, appconfig, NML, document, device, drive, init, L */
 var app = {
     /**
      * Callback for NML.get function
@@ -34,18 +34,21 @@ var app = {
             }
             app.nml.setHomePageId(app.json.ListPage["@attributes"].id);
             var array = app.json.ListPage.pages.BasicPage;
-            console.log(array);
             for(var i=0; i < 10; i++){
-                var feet = parseInt(array[i]["pageText"]);
-                if (feet >= 500 || feet <= 1000){
+                var feet = parseInt(array[i].pageText);
+                if (feet >= 1000 && feet <= 1500){
                     console.log(feet);
-                    var spot = $('<div class="spot_' + i + ' ">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
-                    ($("#results")).append(spot);
-                    var results = $("#map").append($("#results"));
-                    results.show();
-                };  
-            };  
-        }   
+                    var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
+                    $('#parking-list').append(html);
+//                    var spot = $('').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
+//                    ($(".list-group")).append(spot);
+//                    var results = $("#map").append($("#results"));
+//                    results.show();
+                }
+            }
+            $('#map').hide();
+            $('#destination').show();
+        }
     },
     onLocationFound: function (e) {
         var radius = e.accuracy / 2;
@@ -119,7 +122,7 @@ var app = {
     json: {},
     params: [{
         name: "address",
-        value: "1155 Ave of Americas, New York, NY 10036"
+        value: "175 North State Street, Chicago, IL 60601"
     }],
     screen: "#home",
     // Application Constructor
