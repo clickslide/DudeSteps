@@ -37,7 +37,7 @@ var app = {
             console.log(array);
             for(var i=0; i < 10; i++){
                 var feet = parseInt(array[i]["pageText"]);
-                if (feet >= 500 && feet <= 1000){
+                if (feet >= 500 || feet <= 1000){
                     console.log(feet);
                     var spot = $('<div class="spot_' + i + ' ">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
                     ($("#results")).append(spot);
