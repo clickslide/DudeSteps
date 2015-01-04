@@ -15,6 +15,7 @@ var app = {
     onGetData: function (nmldata) {
         console.log("Got NML Data");
 //        console.log(nmldata);
+        app.initGui();
         if (nmldata === null || nmldata === "" || nmldata === " ") {
             app.runLogin();
             //alert("Please be sure to enter an american phone number");
@@ -33,7 +34,13 @@ var app = {
             }
             app.nml.setHomePageId(app.json.ListPage["@attributes"].id);
             var array = app.json.ListPage.pages.BasicPage;
-        }
+            for(var i=0; i < 10; i++){
+                var spot = $('<div class="spot_' + i + '">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
+                ($("#results")).append(spot);
+            }
+            var results = $("#map").append($("#results"))
+            results.show();
+        }   
     },
     onLocationFound: function (e) {
         var radius = e.accuracy / 2;
@@ -79,17 +86,26 @@ var app = {
      * Give all the GUI elements their event listeners
      */
     initGui: function () {
-        $("#map").hide();
-        $("#information").show();
+        $("#destination").hide();
+        $("#map").show();
+        $("#settings").hide();
         $("#homebtn").bind('click', function (evt) {
-            $("#information").hide();
+            $("#destination").hide();
             $("#map").show();
+            $("#settings").hide();
         });
-        $("#infobtn").bind('click', function (evt) {
+        $("#destinationbtn").bind('click', function (evt) {
             $("#map").hide();
-            $("#information").show();
+            $("#settings").hide();
+            $("#destination").show();
+        });
+        $("#settingsbtn").bind('click', function (evt) {
+            $("#map").hide();
+            $("#destination").hide();
+            $("#settings").show();
         });
         $('#loading').fadeOut();
+
     },
     isGap: false,
     nml: null,
