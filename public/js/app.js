@@ -7,6 +7,8 @@
  */
 /*jshint unused: false */
 /* global window, $, appconfig, NML, document, device, drive, init, L */
+
+
 var app = {
     /**
      * Callback for NML.get function
@@ -37,32 +39,12 @@ var app = {
             for(var i=0; i < 20; i++){
                 var feet = parseInt(array[i].pageText);
                 if (feet >= 500 && feet <= 3000){
-                    console.log(feet);
                     var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
                     $('#parking-list').append(html);
                 }
             }
             $('#map').hide();
             $('#destination').show();
-            $('#ListView').on('click', function (e) {
-                console.log('you clicked to see the list')
-                $(this).unbind('click');
-                $('.map-item').bind('click', function(evt){
-                    console.log('clicked on the map');
-                    $('.map-item').unbind('click');
-                    $("#map").hide();
-                    $("#destination").show();
-                });
-            })
-            $('#MapView').on('click', function (e){
-                console.log('you clicked to see the map')
-                $(this).unbind('click');
-                $('#ListView').bind('click', function(evt){
-                    $(this).unbind('click');
-                    $("#map").show();
-                    $("#destination").hide();
-                });
-            })
         }
     },
     onLocationFound: function (e) {
@@ -138,6 +120,19 @@ var app = {
         $('#map').hide();
         console.log("App Init");
         app.bindEvents();
+        $('body').on('click',"#MapView",app.clickOnMapView);
+    },
+    clickOnListView: function() {
+        $(this).unbind('click');
+        $('#MapView').bind('click', app.clickOnMapView);
+        $("#map").hide();
+        $("#destination").show();    
+    },       
+    clickOnMapView: function() {
+        $(this).unbind('click');
+        $('#ListView').bind('click', app.clickOnListView);
+        $("#map").show();
+        $("#destination").hide();     
     },
     // Bind Event Listeners
     bindEvents: function () {
