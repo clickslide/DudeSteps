@@ -41,7 +41,11 @@ var app = {
                 if (feet >= 500 && feet <= 3000){
                     var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
                     $('#parking-list').append(html);
-                    $("#item-")
+                    $("#item-" + i).on('click', function (){
+                        var lat = array[i].glat;
+                        var lng = array[i].glong;
+                        $.post("")
+                    })
                 }
             }
             $('#map').hide();
