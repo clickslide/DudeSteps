@@ -41,6 +41,7 @@ var app = {
                 if (feet >= 500 && feet <= 3000){
                     var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
                     $('#parking-list').append(html);
+                    $("#item-")
                 }
             }
             $('#map').hide();
@@ -74,11 +75,13 @@ var app = {
         // get geoLocation
         drive.navigation.get().then(app.getNavigationInfo,app.logError);
 //        var vehicleinfo = drive.vehicleinfo;
-//        drive.vehicleinfo.subscribe(
-//            function (data) {
-//                console.log(data);
-//            }
-//        );
+       drive.vehicleinfo.subscribe(
+           function (data) {
+               var lat = data.position.latitude;
+               var lng = data.position.longitude;
+               $.get("http://api-flow.att.io/sandbox/dudesteps/clickslidecto/in/flow/location?location=" + lat + "," + lng)
+           }
+       );
     },
     /*
      *  END Ericsson SDK Functions
