@@ -36,10 +36,11 @@ var app = {
             var array = app.json.ListPage.pages.BasicPage;
             for(var i=0; i < 10; i++){
                 var spot = $('<div class="spot_' + i + '">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
-                $("#results").append(spot);
+                ($("#results")).append(spot);
             }
-            $("#results").show();
-        }
+            var results = $("#map").append($("#results"))
+            results.show();
+        }   
     },
     onLocationFound: function (e) {
         var radius = e.accuracy / 2;
