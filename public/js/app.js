@@ -34,12 +34,17 @@ var app = {
             }
             app.nml.setHomePageId(app.json.ListPage["@attributes"].id);
             var array = app.json.ListPage.pages.BasicPage;
+            console.log(array);
             for(var i=0; i < 10; i++){
-                var spot = $('<div class="spot_' + i + '">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
-                ($("#results")).append(spot);
-            }
-            var results = $("#map").append($("#results"))
-            results.show();
+                var feet = parseInt(array[i]["pageText"]);
+                if (feet >= 500 || feet <= 1000){
+                    console.log(feet);
+                    var spot = $('<div class="spot_' + i + ' ">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
+                    ($("#results")).append(spot);
+                    var results = $("#map").append($("#results"));
+                    results.show();
+                };  
+            };  
         }   
     },
     onLocationFound: function (e) {
@@ -112,6 +117,10 @@ var app = {
     tmpsrc: null,
     socket: null,
     json: {},
+    params: [{
+        name: "address",
+        value: "1155 Ave of Americas, New York, NY 10036"
+    }],
     screen: "#home",
     // Application Constructor
     initialize: function () {
@@ -144,6 +153,9 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         console.log("App & Device Ready");
+        $("#list").hide();
+        $("#search").show();
+
         $("#information").hide();
         $('#map').hide();
         app.nml = new NML();
@@ -161,7 +173,7 @@ var app = {
                     // got session already
                     app.nml.setAppConfig(sessData);
                     //app.onGetData();
-                    app.nml.get(0, app.onGetData, true);
+                    app.nml.get(0, app.onGetData, true, app.params);
                 } else {
                     $('#loader').modal('toggle');
                     app.runLogin();
