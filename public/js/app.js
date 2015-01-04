@@ -40,14 +40,21 @@ var app = {
                     console.log(feet);
                     var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
                     $('#parking-list').append(html);
-//                    var spot = $('').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
-//                    ($(".list-group")).append(spot);
-//                    var results = $("#map").append($("#results"));
-//                    results.show();
                 }
             }
             $('#map').hide();
             $('#destination').show();
+            $(".list-group-item").bind('click', function (evt) {
+                $("#map").show();
+                $('.map-item').bind('click', function(evt){
+                    console.log('clicked on the map');
+                    $('.map-item').unbind('click');
+                    $("#map").hide();
+                    $("#destination").show();
+                });
+                $("#destination").hide();
+            });
+
         }
     },
     onLocationFound: function (e) {
@@ -127,6 +134,9 @@ var app = {
     screen: "#home",
     // Application Constructor
     initialize: function () {
+        $("#list").hide();
+        $("#search").show();
+        $('#map').hide();
         console.log("App Init");
         app.bindEvents();
     },
@@ -156,11 +166,6 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function () {
         console.log("App & Device Ready");
-        $("#list").hide();
-        $("#search").show();
-
-        $("#information").hide();
-        $('#map').hide();
         app.nml = new NML();
         app.nml.initWithData = true;
         app.nml.isGap = app.isGap;
