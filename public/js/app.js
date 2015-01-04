@@ -34,9 +34,9 @@ var app = {
             }
             app.nml.setHomePageId(app.json.ListPage["@attributes"].id);
             var array = app.json.ListPage.pages.BasicPage;
-            for(var i=0; i < 10; i++){
+            for(var i=0; i < 20; i++){
                 var feet = parseInt(array[i].pageText);
-                if (feet >= 1000 && feet <= 1500){
+                if (feet >= 500 && feet <= 3000){
                     console.log(feet);
                     var html = '<a id="item-'+i+'" href="#" class="list-group-item"><h4 class="list-group-item-heading">'+array[i].title+'</h4><p class="list-group-item-text">Distance: '+array[i].pageText+' Steps (approximation)</p></a>';
                     $('#parking-list').append(html);
