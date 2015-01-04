@@ -1,17 +1,17 @@
-var host = "10.0.0.16";
+var host = "charlie.hack.att.io";
 var port = "4412";
 
 /**
- * Get the properties to open the web socket 
+ * Get the properties to open the web socket
  * @returns {Map}
  */
 function getProperties() {
-	console.log("Adding Properties for Websocket");
-	var properties = {
-		'host' : host,
-		'port' : port
-	};
-	console.log("Properties are set:" + "Host is: " + host + " and Port is: "
-			+ port);
-	return properties;
+    console.log("Adding Properties for Websocket");
+    var properties = {
+        'host' : host,
+        'port' : port
+    };
+    console.log("Properties are set:" + "Host is: " + host + " and Port is: "
+            + port);
+    return properties;
 }

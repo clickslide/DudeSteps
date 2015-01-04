@@ -6,7 +6,7 @@
  * @namespace NML.js
  */
 /*jshint unused: false */
-/* global window, $, appconfig, NML, document, device, drive */
+/* global window, $, appconfig, NML, document, device, dr   ive */
 var app = {
     /**
      * Callback for NML.get function
@@ -44,6 +44,9 @@ var app = {
         });
         L.marker(e.latlng).bindPopup("<h5>Your Location</h5>").addTo(app.map);
     },
+    /*
+     *  Ericsson SDK Functions
+     */
     getNavigationInfo:function(data){
         console.log("Got Geolocation");
         console.log(data);
@@ -65,6 +68,9 @@ var app = {
 //            }
 //        );
     },
+    /*
+     *  END Ericsson SDK Functions
+     */
 
     onLocationError: function (e) {
         throw e;
