@@ -41,7 +41,7 @@ var app = {
                     console.log(feet);
                     var spot = $('<div class="spot_' + i + ' ">').text("Latitude: " + array[i].glat + "Longitude: " + array[i].glong);
                     ($("#results")).append(spot);
-                    $("#map").append($("#results"));
+                    var results = $("#map").append($("#results"));
                     results.show();
                 };  
             };  
