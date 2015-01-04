@@ -6,7 +6,7 @@
  * @namespace NML.js
  */
 /*jshint unused: false */
-/* global window, $, appconfig, NML, document, device */
+/* global window, $, appconfig, NML, document, device, drive */
 var app = {
     /**
      * Callback for NML.get function
@@ -14,7 +14,7 @@ var app = {
      */
     onGetData: function (nmldata) {
         console.log("Got NML Data");
-        console.log(nmldata);
+//        console.log(nmldata);
         if (nmldata === null || nmldata === "" || nmldata === " ") {
             app.runLogin();
             //alert("Please be sure to enter an american phone number");
@@ -24,156 +24,15 @@ var app = {
             } catch (err) {
                 app.json = nmldata;
             }
-            app.map = L.map('map');
 
-            L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                id: 'examples.map-i875mjb7'
-            }).addTo(app.map);
-            L.control.locate().addTo(app.map);
-            app.map.locate({
-                setView: true,
-                maxZoom: 11
-            });
-            app.map.on('locationfound', app.onLocationFound);
-            app.map.on('locationerror', app.onLocationError);
+            try {
+                // DO NOT REMOVE THE BELLOW COMMENT - used for grunt build process
+                init(app.decCallback, ["appmanager", "commerce", "connectivity", "identity", "media", "navigation", "notification", "policy", "sa", "search", "settings", "sms", "va", "vehicleinfo"], 'myFirstApp');
+            } catch (e) {
+                console.log("", e);
+            }
             app.nml.setHomePageId(app.json.ListPage["@attributes"].id);
             var array = app.json.ListPage.pages.BasicPage;
-
-            var markers = [];
-            // roboto condensed
-            var districts = {};
-            _.each(array, function (item) {
-                var id = parseInt(item.uniqueApiId);
-                switch (item.title) {
-                case "Manhattan":
-                    id += 100;
-                    break;
-                case "Queens":
-                    id += 400;
-                    break;
-                case "Bronx":
-                    id += 200;
-                    break;
-                case "Brooklyn":
-                    id += 300;
-                    break;
-                case "Staten Island":
-                    id += 500;
-                    break;
-
-                }
-                districts[id] = {
-                    total: 0,
-                    count: 0,
-                    avg: 0,
-                    paperhigh: 0,
-                    paperlow: 0,
-                    paperavg: 0,
-                    refusehigh: 0,
-                    refuselow: 0,
-                    refuseavg: 0,
-                    mgplow: 0,
-                    mgphigh: 0,
-                    mgpavg: 0,
-                    name: ""
-                }
-            });
-            _.each(array, function (item) {
-                //districts[item.uniqueApiId] = {}
-                var id = parseInt(item.uniqueApiId);
-                switch (item.title) {
-                case "Manhattan":
-                    id += 100;
-                    break;
-                case "Queens":
-                    id += 400;
-                    break;
-                case "Bronx":
-                    id += 200;
-                    break;
-                case "Brooklyn":
-                    id += 300;
-                    break;
-                case "Staten Island":
-                    id += 500;
-                    break;
-
-                }
-                districts[id].total += (
-                    parseInt(item.glong) +
-                    parseInt(item.glat) +
-                    parseInt(item.pageText)
-                );
-                districts[id].name = item.title;
-                districts[id].count++;
-                districts[id].paperlow = _.min(array, function (o) {
-                    return parseInt(o.glong);
-                });
-                districts[id].paperhigh = _.max(array, function (o) {
-                    return parseInt(o.glong);
-                });
-                districts[id].refuselow = _.min(array, function (o) {
-                    return parseInt(o.glat);
-                });
-                districts[id].refusehigh = _.max(array, function (o) {
-                    return parseInt(o.glat);
-                });
-                districts[id].mgplow = _.min(array, function (o) {
-                    return parseInt(o.pageText);
-                });
-                districts[id].mgphigh = _.max(array, function (o) {
-                    return parseInt(o.pageText);
-                });
-            });
-            var distmin = _.min(districts, function (o) {
-                return o.total;
-            });
-            var distmax = _.max(districts, function (o) {
-                return o.total;
-            });
-            console.log([distmin.total, distmax.total]);
-            var scale = chroma.scale(['green', 'red']).domain([distmin.total, distmax.total]);
-
-
-            // don't do anything until the template loads
-            $.getJSON("community.json").done(function (data) {
-                var distr;
-                app.initGui();
-                L.geoJson(data, {
-                    style: function (feature) {
-                        var hexi = "#000";
-                        if (districts[feature.properties.communityDistrict] != undefined) {
-                            var int = districts[feature.properties.communityDistrict].total;
-                            //console.log(scale(int));
-                            hexi = scale(int).hex();
-                        }
-                        return {
-                            fillColor: hexi,
-                            color: "#000",
-                            fillOpacity: 100,
-                            weight: 1,
-                            opacity: 100
-                        };
-                    },
-                    onEachFeature: function (feature, layer) {
-                        if (districts[feature.properties.communityDistrict] != undefined) {
-                            disct = districts[feature.properties.communityDistrict];
-                            console.log(disct);
-                            layer.bindPopup("<h5>" + disct.name + " " + feature.properties.communityDistrict + "</h><p>" + disct.total + " tons collected.</p>");
-                        } else {
-                            disct = districts[feature.properties.communityDistrict];
-                            console.log(disct);
-                            layer.bindPopup("<h5>Not Yet Available</h5>");
-                        }
-
-                    }
-                }).addTo(app.map);
-
-            });
-
         }
     },
     onLocationFound: function (e) {
@@ -185,6 +44,27 @@ var app = {
         });
         L.marker(e.latlng).bindPopup("<h5>Your Location</h5>").addTo(app.map);
     },
+    getNavigationInfo:function(data){
+        console.log("Got Geolocation");
+        console.log(data);
+    },
+    logError:function(err){
+        console.log(err);
+    },
+    decCallback:function(decResponse) {
+        console.log("DEC Response", decResponse);
+
+        var isOnline = decResponse && decResponse.successCode == '0';
+        $(".connection-status").html(isOnline ? "ONLINE" : "OFFLINE");
+        // get geoLocation
+        drive.navigation.get().then(app.getNavigationInfo,app.logError);
+//        var vehicleinfo = drive.vehicleinfo;
+//        drive.vehicleinfo.subscribe(
+//            function (data) {
+//                console.log(data);
+//            }
+//        );
+    },
 
     onLocationError: function (e) {
         throw e;
@@ -195,11 +75,11 @@ var app = {
     initGui: function () {
         $("#map").hide();
         $("#information").show();
-        $("#homebtn").bind('click', function(evt){
+        $("#homebtn").bind('click', function (evt) {
             $("#information").hide();
             $("#map").show();
         });
-        $("#infobtn").bind('click', function(evt){
+        $("#infobtn").bind('click', function (evt) {
             $("#map").hide();
             $("#information").show();
         });
@@ -297,6 +177,7 @@ var app = {
             app.nml.onLogin(data);
 
             if (data.registerApis === true || data.registerApis === "true") {
+                console.log("manageAuthRedirect");
                 app.nml.manageAuthRedirect(app.nml);
             } else {
                 $('#loader').modal('toggle');
